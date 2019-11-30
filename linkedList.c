@@ -33,14 +33,13 @@ List * makelist(){
     return list;
 }
 
-void display(List * list) {
+Song get(int index, List * list) {
     Node * current = list->head;
-    if(list->head == NULL) 
-        return;
     
-    for(; current != NULL; current = current->next) {
-        printf("%d\n", current->data);
+    for(int i=0; i<index; i++){
+        current = current->next;
     }
+    return current->data;
 }
 
 void add(Song data, List * list){
@@ -74,19 +73,6 @@ void delete(Song data, List * list){
         previous = current;             
         current = current->next;        
     }                                 
-}                                   
-
-void reverse(List * list){
-    Node * reversed = NULL;
-    Node * current = list->head;
-    Node * temp = NULL;
-    while(current != NULL){
-        temp = current;
-        current = current->next;
-        temp->next = reversed;
-        reversed = temp;
-    }
-    list->head = reversed;
 }
 
 void destroy(List * list){
