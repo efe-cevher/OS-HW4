@@ -56,8 +56,9 @@ void add(Song data, List * list){
     }
 }
 
-void delete(Song data, List * list){
-    Node * current = list->head;            
+
+int delete(Song data, List * list){
+/*   Node * current = list->head;            
     Node * previous = current;           
     while(current != NULL){           
         if(current->data.year == data.year && !strcmp(current->data.genre, data.genre) && !strcmp(current->data.name, data.name)){
@@ -72,7 +73,72 @@ void delete(Song data, List * list){
         }                               
         previous = current;             
         current = current->next;        
-    }                                 
+    } 
+*/
+
+    //start from the first link
+    Node* current = list->head;
+    Node* previous = NULL;
+        
+    //if list is empty
+    if(list->head == NULL) {
+        return -1;
+    }
+
+    //navigate through list
+    while(!(current->data.year == data.year && !strcmp(current->data.genre, data.genre) && !strcmp(current->data.name, data.name))) {
+
+        //if it is last node
+        if(current->next == NULL) {
+            return -1;
+        } else {
+            //store reference to current link
+            previous = current;
+            //move to next link
+            current = current->next;
+        }
+    }
+
+    //found a match, update the link
+    if(current == list->head) {
+        //change first to point to next link
+        list->head = list->head->next;
+    } else {
+        //bypass the current link
+        previous->next = current->next;
+    }    
+	
+   return 1;
+}
+
+
+int getSize(List * list){
+    Node * current = list->head;
+    int c = 0;
+
+    while(current != NULL){           
+        c++;
+        current = current->next;        
+    }
+    return c;
+}
+
+int isEmpty(List * list){
+    if(getSize(list) == 0){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+void display(List * list) {
+    Node * current = list->head;
+    if(list->head == NULL) 
+        return;
+    
+    for(; current != NULL; current = current->next) {
+        printf("%s, %s, %d\n", current->data.name, current->data.genre, current->data.year);
+    }
 }
 
 void destroy(List * list){
