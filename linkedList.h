@@ -1,14 +1,14 @@
-#include "song.h"
+#include"song.h"
+
+struct node
+{
+    Song data;
+    struct node * next;
+};
 
 typedef struct node Node;
 
-typedef struct list List;
 
-List * makelist();
-void add(Song data, List * list);
-int delete(Song data, List * list);
-Song get(int index, List * list);
-void destroy(List * list);
-int getSize(List * list);
-int isEmpty(List * list);
-void display(List * list);
+void append(Node** head_ref, Song new_data);
+void deleteNode(Node **head_ref, int position);
+void printList(Node* n) ;

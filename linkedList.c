@@ -1,153 +1,83 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "linkedlist.h"
-#include <string.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-struct node {
-    Song data;
-    struct node * next;
-};
 
-struct list {
-    Node * head; 
-};
+#include"linkedList.h"
 
-Node * createnode(Song data);
 
-Node * createnode(Song data){
-    Node * newNode = malloc(sizeof(Node));
-    if (!newNode) {
-        return NULL;
-    }
-    newNode->data = data;
-    newNode->next = NULL;
-    return newNode;
+
+
+
+void append(Node** head_ref, Song new_data) 
+{ 
+    /* 1. allocate node */
+    Node* new_node = (Node*) malloc(sizeof(Node)); 
+  
+    Node *last = *head_ref;  /* used in step 5*/
+   
+    /* 2. put in the data  */
+    new_node->data  = new_data; 
+  
+    /* 3. This new node is going to be the last node, so make next  
+          of it as NULL*/
+    new_node->next = NULL; 
+  
+    /* 4. If the Linked List is empty, then make the new node as head */
+    if (*head_ref == NULL) 
+    { 
+       *head_ref = new_node; 
+       return; 
+    }   
+       
+    /* 5. Else traverse till the last node */
+    while (last->next != NULL) 
+        last = last->next; 
+   
+    /* 6. Change the next of last node */
+    last->next = new_node; 
+    return;     
 }
 
-List * makelist(){
-    List * list = malloc(sizeof(List));
-    if (!list) {
-        return NULL;
-    }
-    list->head = NULL;
-    return list;
-}
-
-Song get(int index, List * list) {
-    Node * current = list->head;
-    
-    for(int i=0; i<index; i++){
-        current = current->next;
-    }
-    return current->data;
-}
-
-void add(Song data, List * list){
-  Node * current = NULL;
-    if(list->head == NULL){
-        list->head = createnode(data);
-    }
-    else {
-        current = list->head; 
-        while (current->next!=NULL){
-            current = current->next;
-        }
-        current->next = createnode(data);
-    }
-}
-
-
-int delete(Song data, List * list){
-/*   Node * current = list->head;            
-    Node * previous = current;           
-    while(current != NULL){           
-        if(current->data.year == data.year && !strcmp(current->data.genre, data.genre) && !strcmp(current->data.name, data.name)){
-            previous->next = current->next;
-
-            if(current == list->head){
-                list->head = current->next;
-            }
-                
-            free(current);
-            return;
-        }                               
-        previous = current;             
-        current = current->next;        
+void deleteNode(Node **head_ref, int position) 
+{ 
+   // If linked list is empty 
+   if (*head_ref == NULL) 
+      return; 
+  
+   // Store head node 
+   Node* temp = *head_ref; 
+  
+    // If head needs to be removed 
+    if (position == 0) 
+    { 
+        *head_ref = temp->next;   // Change head 
+        free(temp);               // free old head 
+        return; 
     } 
-*/
-
-    //start from the first link
-    Node* current = list->head;
-    Node* previous = NULL;
-        
-    //if list is empty
-    if(list->head == NULL) {
-        return -1;
-    }
-
-    //navigate through list
-    while(!(current->data.year == data.year && !strcmp(current->data.genre, data.genre) && !strcmp(current->data.name, data.name))) {
-
-        //if it is last node
-        if(current->next == NULL) {
-            return -1;
-        } else {
-            //store reference to current link
-            previous = current;
-            //move to next link
-            current = current->next;
-        }
-    }
-
-    //found a match, update the link
-    if(current == list->head) {
-        //change first to point to next link
-        list->head = list->head->next;
-    } else {
-        //bypass the current link
-        previous->next = current->next;
-    }    
-	
-   return 1;
+  
+    // Find previous node of the node to be deleted 
+    for (int i=0; temp!=NULL && i<position-1; i++) 
+         temp = temp->next; 
+  
+    // If position is more than number of ndoes 
+    if (temp == NULL || temp->next == NULL) 
+         return; 
+  
+    // Node temp->next is the node to be deleted 
+    // Store pointer to the next of node to be deleted 
+    Node *next = temp->next->next; 
+  
+    // Unlink the node from linked list 
+    free(temp->next);  // Free memory 
+  
+    temp->next = next;  // Unlink the deleted node from list 
 }
 
-
-int getSize(List * list){
-    Node * current = list->head;
-    int c = 0;
-
-    while(current != NULL){           
-        c++;
-        current = current->next;        
-    }
-    return c;
+void printList(Node* n) 
+{ 
+    while (n != NULL) { 
+        printf(" %s, %s, %d \n", n->data.name, n->data.genre, n->data.year); 
+        n = n->next; 
+    } 
 }
 
-int isEmpty(List * list){
-    if(getSize(list) == 0){
-        return 1;
-    }else{
-        return 0;
-    }
-}
-
-void display(List * list) {
-    Node * current = list->head;
-    if(list->head == NULL) 
-        return;
-    
-    for(; current != NULL; current = current->next) {
-        printf("%s, %s, %d\n", current->data.name, current->data.genre, current->data.year);
-    }
-}
-
-void destroy(List * list){
-    Node * current = list->head;
-    Node * next = current;
-    while(current != NULL){
-        next = current->next;
-        free(current);
-        current = next;
-    }
-    free(list);
-}
